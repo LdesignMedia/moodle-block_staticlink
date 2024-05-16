@@ -35,7 +35,7 @@
  * @return bool
  * @todo      MDL-36050 improve capability check on stick blocks, so we can check user capability before sending images.
  */
-function block_staticlink_pluginfile($course, $birecord_or_cm, $context, $filearea, $args, $forcedownload, array $options = []) {
+function block_staticlink_pluginfile($course, $birecord_or_cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
     global $DB, $CFG, $USER;
 
     if ($context->contextlevel != CONTEXT_BLOCK) {
@@ -69,7 +69,7 @@ function block_staticlink_pluginfile($course, $birecord_or_cm, $context, $filear
     $fs = get_file_storage();
 
     $filename = array_pop($args);
-    $filepath = $args ? '/' . implode('/', $args) . '/' : '/';
+    $filepath = $args ? '/'.implode('/', $args).'/' : '/';
 
     if (!$file = $fs->get_file($context->id, 'block_staticlink', 'content', 0, $filepath, $filename) or $file->is_directory()) {
         send_file_not_found();
@@ -94,25 +94,21 @@ function block_staticlink_pluginfile($course, $birecord_or_cm, $context, $filear
 
 /**
  * Perform global search replace such as when migrating site to new URL.
- *
  * @param  $search
  * @param  $replace
- *
  * @return void
  */
 function block_staticlink_global_db_replace($search, $replace) {
     global $DB;
 
-    $instances = $DB->get_recordset('block_instances', ['blockname' => 'html']);
+    $instances = $DB->get_recordset('block_instances', array('blockname' => 'staticlink'));
     foreach ($instances as $instance) {
         // TODO: intentionally hardcoded until MDL-26800 is fixed
         $config = unserialize_object(base64_decode($instance->configdata));
         if (isset($config->text) and is_string($config->text)) {
             $config->text = str_replace($search, $replace, $config->text);
-            $DB->update_record('block_instances', [
-                'id' => $instance->id,
-                'configdata' => base64_encode(serialize($config)), 'timemodified' => time(),
-            ]);
+            $DB->update_record('block_instances', ['id' => $instance->id,
+                                                   'configdata' => base64_encode(serialize($config)), 'timemodified' => time()]);
         }
     }
     $instances->close();
@@ -121,9 +117,8 @@ function block_staticlink_global_db_replace($search, $replace) {
 /**
  * Given an array with a file path, it returns the itemid and the filepath for the defined filearea.
  *
- * @param string $filearea The filearea.
- * @param array $args      The path (the part after the filearea and before the filename).
- *
+ * @param  string $filearea The filearea.
+ * @param  array  $args The path (the part after the filearea and before the filename).
  * @return array The itemid and the filepath inside the $args path, for the defined filearea.
  */
 function block_staticlink_get_path_from_pluginfile(string $filearea, array $args): array {

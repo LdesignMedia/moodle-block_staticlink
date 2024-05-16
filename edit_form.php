@@ -15,17 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for editing HTML block instances.
- *
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @package   block_staticlink
- * @copyright 29/12/2021 Mfreak.nl | LdesignMedia.nl - Luuk Verhoeven
- * @author    Nihaal Shaikh
- */
-
-/**
- * Form for editing HTML block instances.
+ * Form for editing Static Link block instances.
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -38,16 +28,14 @@ class block_staticlink_edit_form extends block_edit_form {
     protected function specific_definition($mform) {
         global $CFG;
 
-        // Fields for editing HTML block title and contents.
+        // Fields for editing Static Link block title and contents.
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
 
         $mform->addElement('text', 'config_title', get_string('configtitle', 'block_staticlink'));
         $mform->setType('config_title', PARAM_TEXT);
 
-        $editoroptions = ['maxfiles' => EDITOR_UNLIMITED_FILES, 'noclean' => true, 'context' => $this->block->context];
-        $mform->addElement('editor', 'config_text', get_string('configcontent', 'block_staticlink'), null, $editoroptions);
-        $mform->addRule('config_text', null, 'required', null, 'client');
-        $mform->setType('config_text', PARAM_RAW); // XSS is prevented when printing the block contents and serving files
+        $mform->addElement('text', 'config_text', get_string('configcontent', 'block_staticlink'));
+        $mform->setType('config_text', PARAM_TEXT);
 
         if (!empty($CFG->block_staticlink_allowcssclasses)) {
             $mform->addElement('text', 'config_classes', get_string('configclasses', 'block_staticlink'));
@@ -57,42 +45,40 @@ class block_staticlink_edit_form extends block_edit_form {
     }
 
     function set_data($defaults) {
-        if (!empty($this->block->config) && !empty($this->block->config->text)) {
-            $text = $this->block->config->text;
-            $draftid_editor = file_get_submitted_draft_itemid('config_text');
-            if (empty($text)) {
-                $currenttext = '';
-            } else {
-                $currenttext = $text;
-            }
-            $defaults->config_text['text'] = file_prepare_draft_area($draftid_editor, $this->block->context->id, 'block_staticlink', 'content', 0, array('subdirs'=>true), $currenttext);
-            $defaults->config_text['itemid'] = $draftid_editor;
-            $defaults->config_text['format'] = $this->block->config->format ?? FORMAT_MOODLE;
-        } else {
-            $text = '';
-        }
-
         if (!$this->block->user_can_edit() && !empty($this->block->config->title)) {
-            // If a title has been set but the user cannot edit it format it nicely
+            // If a title has been set but the user cannot edit it format it nicely.
             $title = $this->block->config->title;
             $defaults->config_title = format_string($title, true, $this->page->context);
             // Remove the title from the config so that parent::set_data doesn't set it.
             unset($this->block->config->title);
         }
 
-        // have to delete text here, otherwise parent::set_data will empty content
-        // of editor
-        unset($this->block->config->text);
+        if (!$this->block->user_can_edit() && !empty($this->block->config->text)) {
+            // If a title has been set but the user cannot edit it format it nicely.
+            $title = $this->block->config->text;
+            $defaults->config_text = format_string($title, true, $this->page->context);
+            // Remove the text from the config so that parent::set_data doesn't set it.
+            unset($this->block->config->text);
+        }
         parent::set_data($defaults);
-        // restore $text
+        // Restore $text.
         if (!isset($this->block->config)) {
             $this->block->config = new stdClass();
         }
-        $this->block->config->text = $text;
-        if (isset($title)) {
-            // Reset the preserved title
+        if (isset($title) || isset($content)) {
+            // Reset the preserved title or content.
             $this->block->config->title = $title;
+            $this->block->config->text = $content;
         }
+    }
+
+    /**
+     * Display the configuration form when block is being added to the page
+     *
+     * @return bool
+     */
+    public static function display_form_when_adding(): bool {
+        return true;
     }
 
 }
