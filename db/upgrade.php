@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @param int $oldversion
  */
-function xmldb_block_html_upgrade($oldversion) {
+function xmldb_block_staticlink_upgrade($oldversion) {
     global $CFG;
 
     // Automatically generated Moodle v3.9.0 release upgrade line.

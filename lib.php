@@ -35,7 +35,7 @@
  * @return bool
  * @todo      MDL-36050 improve capability check on stick blocks, so we can check user capability before sending images.
  */
-function block_html_pluginfile($course, $birecord_or_cm, $context, $filearea, $args, $forcedownload, array $options = []) {
+function block_staticlink_pluginfile($course, $birecord_or_cm, $context, $filearea, $args, $forcedownload, array $options = []) {
     global $DB, $CFG, $USER;
 
     if ($context->contextlevel != CONTEXT_BLOCK) {
@@ -71,7 +71,7 @@ function block_html_pluginfile($course, $birecord_or_cm, $context, $filearea, $a
     $filename = array_pop($args);
     $filepath = $args ? '/' . implode('/', $args) . '/' : '/';
 
-    if (!$file = $fs->get_file($context->id, 'block_html', 'content', 0, $filepath, $filename) or $file->is_directory()) {
+    if (!$file = $fs->get_file($context->id, 'block_staticlink', 'content', 0, $filepath, $filename) or $file->is_directory()) {
         send_file_not_found();
     }
 
@@ -100,7 +100,7 @@ function block_html_pluginfile($course, $birecord_or_cm, $context, $filearea, $a
  *
  * @return void
  */
-function block_html_global_db_replace($search, $replace) {
+function block_staticlink_global_db_replace($search, $replace) {
     global $DB;
 
     $instances = $DB->get_recordset('block_instances', ['blockname' => 'html']);
@@ -126,7 +126,7 @@ function block_html_global_db_replace($search, $replace) {
  *
  * @return array The itemid and the filepath inside the $args path, for the defined filearea.
  */
-function block_html_get_path_from_pluginfile(string $filearea, array $args): array {
+function block_staticlink_get_path_from_pluginfile(string $filearea, array $args): array {
     // This block never has an itemid (the number represents the revision but it's not stored in database).
     array_shift($args);
 

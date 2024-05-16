@@ -23,10 +23,10 @@
  * @copyright 29/12/2021 Mfreak.nl | LdesignMedia.nl - Luuk Verhoeven
  * @author    Nihaal Shaikh
  */
-class block_html extends block_base {
+class block_staticlink extends block_base {
 
     function init() {
-        $this->title = get_string('pluginname', 'block_html');
+        $this->title = get_string('pluginname', 'block_staticlink');
     }
 
     function has_config() {
@@ -41,7 +41,7 @@ class block_html extends block_base {
         if (isset($this->config->title)) {
             $this->title = $this->title = format_string($this->config->title, true, ['context' => $this->context]);
         } else {
-            $this->title = get_string('newhtmlblock', 'block_html');
+            $this->title = get_string('newhtmlblock', 'block_staticlink');
         }
     }
 
@@ -69,7 +69,7 @@ class block_html extends block_base {
         $this->content->footer = '';
         if (isset($this->config->text)) {
             // rewrite url
-            $this->config->text = file_rewrite_pluginfile_urls($this->config->text, 'pluginfile.php', $this->context->id, 'block_html', 'content', null);
+            $this->config->text = file_rewrite_pluginfile_urls($this->config->text, 'pluginfile.php', $this->context->id, 'block_staticlink', 'content', null);
             // Default to FORMAT_HTML which is what will have been used before the
             // editor was properly implemented for the block.
             $format = FORMAT_HTML;
@@ -115,8 +115,8 @@ class block_html extends block_base {
                 $format = $this->config->format;
             }
             [$bc->content, $bc->contentformat] =
-                external_format_text($this->config->text, $format, $this->context, 'block_html', 'content', null, $filteropt);
-            $bc->files = external_util::get_area_files($this->context->id, 'block_html', 'content', false, false);
+                external_format_text($this->config->text, $format, $this->context, 'block_staticlink', 'content', null, $filteropt);
+            $bc->files = external_util::get_area_files($this->context->id, 'block_staticlink', 'content', false, false);
 
         }
 
@@ -131,7 +131,7 @@ class block_html extends block_base {
 
         $config = clone($data);
         // Move embedded files into a proper filearea and adjust HTML links to match
-        $config->text = file_save_draft_area_files($data->text['itemid'], $this->context->id, 'block_html', 'content', 0, array('subdirs' => true), $data->text['text']);
+        $config->text = file_save_draft_area_files($data->text['itemid'], $this->context->id, 'block_staticlink', 'content', 0, array('subdirs' => true), $data->text['text']);
         $config->format = $data->text['format'];
 
         parent::instance_config_save($config, $nolongerused);
@@ -140,7 +140,7 @@ class block_html extends block_base {
     function instance_delete() {
         global $DB;
         $fs = get_file_storage();
-        $fs->delete_area_files($this->context->id, 'block_html');
+        $fs->delete_area_files($this->context->id, 'block_staticlink');
 
         return true;
     }
@@ -156,7 +156,7 @@ class block_html extends block_base {
         $fromcontext = context_block::instance($fromid);
         $fs = get_file_storage();
         // Do not use draft files hacks outside of forms.
-        $files = $fs->get_area_files($fromcontext->id, 'block_html', 'content', 0, 'id ASC', false);
+        $files = $fs->get_area_files($fromcontext->id, 'block_staticlink', 'content', 0, 'id ASC', false);
         foreach ($files as $file) {
             $filerecord = ['contextid' => $this->context->id];
             $fs->create_file_from_storedfile($filerecord, $file);
@@ -206,7 +206,7 @@ class block_html extends block_base {
 
         $attributes = parent::html_attributes();
 
-        if (!empty($CFG->block_html_allowcssclasses)) {
+        if (!empty($CFG->block_staticlink_allowcssclasses)) {
             if (!empty($this->config->classes)) {
                 $attributes['class'] .= ' ' . $this->config->classes;
             }
@@ -226,7 +226,7 @@ class block_html extends block_base {
 
         // Return all settings for all users since it is safe (no private keys, etc..).
         $instanceconfigs = !empty($this->config) ? $this->config : new stdClass();
-        $pluginconfigs = (object) ['allowcssclasses' => $CFG->block_html_allowcssclasses];
+        $pluginconfigs = (object) ['allowcssclasses' => $CFG->block_staticlink_allowcssclasses];
 
         return (object) [
             'instance' => $instanceconfigs,
