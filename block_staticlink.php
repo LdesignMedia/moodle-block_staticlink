@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for editing HTML block instances.
+ * Form for editing Static Link block instances.
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -23,7 +23,6 @@
  * @copyright 29/12/2021 Mfreak.nl | LdesignMedia.nl - Luuk Verhoeven
  * @author    Nihaal Shaikh
  */
-
 class block_html extends block_base {
 
     function init() {
@@ -35,7 +34,7 @@ class block_html extends block_base {
     }
 
     function applicable_formats() {
-        return array('all' => true);
+        return ['all' => true];
     }
 
     function specialization() {
@@ -120,9 +119,9 @@ class block_html extends block_base {
             $bc->files = external_util::get_area_files($this->context->id, 'block_html', 'content', false, false);
 
         }
+
         return $bc;
     }
-
 
     /**
      * Serialize and store config data
@@ -142,12 +141,15 @@ class block_html extends block_base {
         global $DB;
         $fs = get_file_storage();
         $fs->delete_area_files($this->context->id, 'block_html');
+
         return true;
     }
 
     /**
      * Copy any block-specific data when copying to a new block instance.
+     *
      * @param int $fromid the id number of the block instance to copy from
+     *
      * @return boolean
      */
     public function instance_copy($fromid) {
@@ -159,6 +161,7 @@ class block_html extends block_base {
             $filerecord = ['contextid' => $this->context->id];
             $fs->create_file_from_storedfile($filerecord, $file);
         }
+
         return true;
     }
 
@@ -205,7 +208,7 @@ class block_html extends block_base {
 
         if (!empty($CFG->block_html_allowcssclasses)) {
             if (!empty($this->config->classes)) {
-                $attributes['class'] .= ' '.$this->config->classes;
+                $attributes['class'] .= ' ' . $this->config->classes;
             }
         }
 
@@ -230,4 +233,5 @@ class block_html extends block_base {
             'plugin' => $pluginconfigs,
         ];
     }
+
 }

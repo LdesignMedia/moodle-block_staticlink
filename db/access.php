@@ -15,37 +15,39 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * HTML block caps.
+ * Static Link block caps.
  *
- * @package    block_html
- * @copyright  Mark Nelson <markn@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   block_staticlink
+ * @copyright 29/12/2021 Mfreak.nl | LdesignMedia.nl - Luuk Verhoeven
+ * @author    Nihaal Shaikh
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
-    'block/html:myaddinstance' => array(
+    'block/staticlink:myaddinstance' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
-            'user' => CAP_ALLOW
-        ),
+        'archetypes' => [
+            'user' => CAP_ALLOW,
+        ],
 
-        'clonepermissionsfrom' => 'moodle/my:manageblocks'
-    ),
+        'clonepermissionsfrom' => 'moodle/my:manageblocks',
+    ],
 
-    'block/html:addinstance' => array(
+    'block/staticlink:addinstance' => [
         'riskbitmask' => RISK_SPAM | RISK_XSS,
 
         'captype' => 'write',
         'contextlevel' => CONTEXT_BLOCK,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ),
+            'manager' => CAP_ALLOW,
+        ],
 
-        'clonepermissionsfrom' => 'moodle/site:manageblocks'
-    ),
-);
+        'clonepermissionsfrom' => 'moodle/site:manageblocks',
+    ],
+];

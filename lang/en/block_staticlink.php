@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_staticlink', language 'en', branch 'MOODLE_20_STABLE'
+ * Strings for component 'block_staticlink', language 'en'
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *

@@ -34,6 +34,7 @@
  * @author    Nihaal Shaikh
  */
 class block_html_edit_form extends block_edit_form {
+
     protected function specific_definition($mform) {
         global $CFG;
 
@@ -43,7 +44,7 @@ class block_html_edit_form extends block_edit_form {
         $mform->addElement('text', 'config_title', get_string('configtitle', 'block_html'));
         $mform->setType('config_title', PARAM_TEXT);
 
-        $editoroptions = array('maxfiles' => EDITOR_UNLIMITED_FILES, 'noclean'=>true, 'context'=>$this->block->context);
+        $editoroptions = ['maxfiles' => EDITOR_UNLIMITED_FILES, 'noclean' => true, 'context' => $this->block->context];
         $mform->addElement('editor', 'config_text', get_string('configcontent', 'block_html'), null, $editoroptions);
         $mform->addRule('config_text', null, 'required', null, 'client');
         $mform->setType('config_text', PARAM_RAW); // XSS is prevented when printing the block contents and serving files
@@ -93,4 +94,5 @@ class block_html_edit_form extends block_edit_form {
             $this->block->config->title = $title;
         }
     }
+
 }

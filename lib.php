@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for editing HTML block instances.
+ * Form for editing Static Link block instances.
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -23,18 +23,19 @@
  * @copyright 29/12/2021 Mfreak.nl | LdesignMedia.nl - Luuk Verhoeven
  * @author    Nihaal Shaikh
  * @category  files
- * @param stdClass $course course object
+ *
+ * @param stdClass $course         course object
  * @param stdClass $birecord_or_cm block instance record
- * @param stdClass $context context object
- * @param string $filearea file area
- * @param array $args extra arguments
- * @param bool $forcedownload whether or not force download
- * @param array $options additional options affecting the file serving
+ * @param stdClass $context        context object
+ * @param string $filearea         file area
+ * @param array $args              extra arguments
+ * @param bool $forcedownload      whether or not force download
+ * @param array $options           additional options affecting the file serving
  *
  * @return bool
- * @todo MDL-36050 improve capability check on stick blocks, so we can check user capability before sending images.
+ * @todo      MDL-36050 improve capability check on stick blocks, so we can check user capability before sending images.
  */
-function block_html_pluginfile($course, $birecord_or_cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function block_html_pluginfile($course, $birecord_or_cm, $context, $filearea, $args, $forcedownload, array $options = []) {
     global $DB, $CFG, $USER;
 
     if ($context->contextlevel != CONTEXT_BLOCK) {
@@ -68,7 +69,7 @@ function block_html_pluginfile($course, $birecord_or_cm, $context, $filearea, $a
     $fs = get_file_storage();
 
     $filename = array_pop($args);
-    $filepath = $args ? '/'.implode('/', $args).'/' : '/';
+    $filepath = $args ? '/' . implode('/', $args) . '/' : '/';
 
     if (!$file = $fs->get_file($context->id, 'block_html', 'content', 0, $filepath, $filename) or $file->is_directory()) {
         send_file_not_found();
@@ -93,21 +94,25 @@ function block_html_pluginfile($course, $birecord_or_cm, $context, $filearea, $a
 
 /**
  * Perform global search replace such as when migrating site to new URL.
+ *
  * @param  $search
  * @param  $replace
+ *
  * @return void
  */
 function block_html_global_db_replace($search, $replace) {
     global $DB;
 
-    $instances = $DB->get_recordset('block_instances', array('blockname' => 'html'));
+    $instances = $DB->get_recordset('block_instances', ['blockname' => 'html']);
     foreach ($instances as $instance) {
         // TODO: intentionally hardcoded until MDL-26800 is fixed
         $config = unserialize_object(base64_decode($instance->configdata));
         if (isset($config->text) and is_string($config->text)) {
             $config->text = str_replace($search, $replace, $config->text);
-            $DB->update_record('block_instances', ['id' => $instance->id,
-                    'configdata' => base64_encode(serialize($config)), 'timemodified' => time()]);
+            $DB->update_record('block_instances', [
+                'id' => $instance->id,
+                'configdata' => base64_encode(serialize($config)), 'timemodified' => time(),
+            ]);
         }
     }
     $instances->close();
@@ -116,11 +121,12 @@ function block_html_global_db_replace($search, $replace) {
 /**
  * Given an array with a file path, it returns the itemid and the filepath for the defined filearea.
  *
- * @param  string $filearea The filearea.
- * @param  array  $args The path (the part after the filearea and before the filename).
+ * @param string $filearea The filearea.
+ * @param array $args      The path (the part after the filearea and before the filename).
+ *
  * @return array The itemid and the filepath inside the $args path, for the defined filearea.
  */
-function block_html_get_path_from_pluginfile(string $filearea, array $args) : array {
+function block_html_get_path_from_pluginfile(string $filearea, array $args): array {
     // This block never has an itemid (the number represents the revision but it's not stored in database).
     array_shift($args);
 
