@@ -24,7 +24,6 @@
  * @author    Nihaal Shaikh
  */
 class block_staticlink extends block_base {
-
     function init() {
         $this->title = get_string('pluginname', 'block_staticlink');
     }
@@ -34,14 +33,14 @@ class block_staticlink extends block_base {
     }
 
     function applicable_formats() {
-        return ['all' => true];
+        return array('all' => true);
     }
 
     function specialization() {
         if (isset($this->config->title)) {
             $this->title = $this->title = format_string($this->config->title, true, ['context' => $this->context]);
         } else {
-            $this->title = get_string('newhtmlblock', 'block_staticlink');
+            $this->title = get_string('newstaticlinkblock', 'block_staticlink');
         }
     }
 
@@ -53,8 +52,7 @@ class block_staticlink extends block_base {
         global $CFG;
 
         require_once($CFG->libdir . '/filelib.php');
-
-        if ($this->content !== null) {
+        if ($this->content !== NULL) {
             return $this->content;
         }
 
@@ -64,12 +62,11 @@ class block_staticlink extends block_base {
             // fancy html allowed only on course, category and system blocks.
             $filteropt->noclean = true;
         }
-
         $this->content = new stdClass;
         $this->content->footer = '';
         if (isset($this->config->text)) {
             // rewrite url
-            $this->config->text = file_rewrite_pluginfile_urls($this->config->text, 'pluginfile.php', $this->context->id, 'block_staticlink', 'content', null);
+            $this->config->text = file_rewrite_pluginfile_urls($this->config->text, 'pluginfile.php', $this->context->id, 'block_staticlink', 'content', NULL);
             // Default to FORMAT_HTML which is what will have been used before the
             // editor was properly implemented for the block.
             $format = FORMAT_HTML;
@@ -77,7 +74,7 @@ class block_staticlink extends block_base {
             if (isset($this->config->format)) {
                 $format = $this->config->format;
             }
-            $this->content->text = format_text($this->config->text, $format, $filteropt);
+            $this->content->text = get_string('staticlink', 'block_staticlink', $this->config->text);
         } else {
             $this->content->text = '';
         }
@@ -88,9 +85,6 @@ class block_staticlink extends block_base {
     }
 
     public function get_content_for_external($output) {
-        global $CFG;
-        require_once($CFG->libdir . '/externallib.php');
-
         $bc = new stdClass;
         $bc->title = null;
         $bc->content = '';
@@ -114,25 +108,28 @@ class block_staticlink extends block_base {
             if (isset($this->config->format)) {
                 $format = $this->config->format;
             }
-            [$bc->content, $bc->contentformat] =
-                external_format_text($this->config->text, $format, $this->context, 'block_staticlink', 'content', null, $filteropt);
+            [$bc->content, $bc->contentformat] = \core_external\util::format_text(
+                $this->config->text,
+                $format,
+                $this->context,
+                'block_staticlink',
+                'content',
+                null,
+                $filteropt
+            );
             $bc->files = external_util::get_area_files($this->context->id, 'block_staticlink', 'content', false, false);
 
         }
-
         return $bc;
     }
+
 
     /**
      * Serialize and store config data
      */
     function instance_config_save($data, $nolongerused = false) {
-        global $DB;
 
         $config = clone($data);
-        // Move embedded files into a proper filearea and adjust HTML links to match
-        $config->text = file_save_draft_area_files($data->text['itemid'], $this->context->id, 'block_staticlink', 'content', 0, array('subdirs' => true), $data->text['text']);
-        $config->format = $data->text['format'];
 
         parent::instance_config_save($config, $nolongerused);
     }
@@ -141,15 +138,12 @@ class block_staticlink extends block_base {
         global $DB;
         $fs = get_file_storage();
         $fs->delete_area_files($this->context->id, 'block_staticlink');
-
         return true;
     }
 
     /**
      * Copy any block-specific data when copying to a new block instance.
-     *
      * @param int $fromid the id number of the block instance to copy from
-     *
      * @return boolean
      */
     public function instance_copy($fromid) {
@@ -161,7 +155,6 @@ class block_staticlink extends block_base {
             $filerecord = ['contextid' => $this->context->id];
             $fs->create_file_from_storedfile($filerecord, $file);
         }
-
         return true;
     }
 
@@ -171,7 +164,7 @@ class block_staticlink extends block_base {
         if (!$context = context::instance_by_id($this->instance->parentcontextid, IGNORE_MISSING)) {
             return false;
         }
-        // find out if this block is on the profile page
+        //find out if this block is on the profile page
         if ($context->contextlevel == CONTEXT_USER) {
             if ($SCRIPT === '/my/index.php') {
                 // this is exception - page is completely private, nobody else may see content there
@@ -208,7 +201,7 @@ class block_staticlink extends block_base {
 
         if (!empty($CFG->block_staticlink_allowcssclasses)) {
             if (!empty($this->config->classes)) {
-                $attributes['class'] .= ' ' . $this->config->classes;
+                $attributes['class'] .= ' '.$this->config->classes;
             }
         }
 
@@ -233,5 +226,4 @@ class block_staticlink extends block_base {
             'plugin' => $pluginconfigs,
         ];
     }
-
 }
