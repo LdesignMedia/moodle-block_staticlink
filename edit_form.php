@@ -36,12 +36,6 @@ class block_staticlink_edit_form extends block_edit_form {
 
         $mform->addElement('text', 'config_text', get_string('configcontent', 'block_staticlink'));
         $mform->setType('config_text', PARAM_TEXT);
-
-        if (!empty($CFG->block_staticlink_allowcssclasses)) {
-            $mform->addElement('text', 'config_classes', get_string('configclasses', 'block_staticlink'));
-            $mform->setType('config_classes', PARAM_TEXT);
-            $mform->addHelpButton('config_classes', 'configclasses', 'block_staticlink');
-        }
     }
 
     function set_data($defaults) {

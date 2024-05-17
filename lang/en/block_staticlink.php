@@ -36,4 +36,4 @@ $string['newstaticlinkblock'] = '(new static link block)';
 $string['pluginname'] = 'Static Link';
 $string['search:content'] = 'Static Link block content';
 $string['privacy:metadata:block'] = 'The Static Link block stores all of its data within the block subsystem.';
-$string['staticlink'] = '<a href="https://bsl.nl/feedbackform?code=' . $a . '">Enter</a>';
+$string['staticlink'] = '<a href="https://bsl.nl/feedbackform?code={$a}">Enter</a>';
