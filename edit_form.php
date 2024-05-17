@@ -25,8 +25,11 @@
  */
 class block_staticlink_edit_form extends block_edit_form {
 
-    protected function specific_definition($mform) {
-        global $CFG;
+    /**
+     * Specific fields for block_staticlink
+     * @param object $mform the form being built.
+     */
+    protected function specific_definition($mform): void {
 
         // Fields for editing Static Link block title and contents.
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
@@ -38,31 +41,34 @@ class block_staticlink_edit_form extends block_edit_form {
         $mform->setType('config_text', PARAM_TEXT);
     }
 
-    function set_data($defaults) {
-        if (!$this->block->user_can_edit() && !empty($this->block->config->title)) {
-            // If a title has been set but the user cannot edit it format it nicely.
-            $title = $this->block->config->title;
-            $defaults->config_title = format_string($title, true, $this->page->context);
-            // Remove the title from the config so that parent::set_data doesn't set it.
-            unset($this->block->config->title);
+    /**
+     * Load in existing data as form defaults. Usually new entry defaults are stored directly in
+     * form definition (new entry form); this function is used to load in data where values
+     * already exist and data is being edited (edit entry form).
+     *
+     * @param $defaults
+     */
+    public function set_data($defaults): void {
+        $canedit = $this->block->user_can_edit();
+        $config = $this->block->config;
+
+        foreach (['title', 'text'] as $field) {
+            if (!$canedit && !empty($config->$field)) {
+                ${$field} = $config->$field;
+                $defaults->{"config_$field"} = format_string(${$field}, true, $this->page->context);
+                unset($config->$field);
+            }
         }
 
-        if (!$this->block->user_can_edit() && !empty($this->block->config->text)) {
-            // If a title has been set but the user cannot edit it format it nicely.
-            $title = $this->block->config->text;
-            $defaults->config_text = format_string($title, true, $this->page->context);
-            // Remove the text from the config so that parent::set_data doesn't set it.
-            unset($this->block->config->text);
-        }
         parent::set_data($defaults);
-        // Restore $text.
-        if (!isset($this->block->config)) {
+
+        if (!isset($config)) {
             $this->block->config = new stdClass();
         }
-        if (isset($title) || isset($content)) {
-            // Reset the preserved title or content.
-            $this->block->config->title = $title;
-            $this->block->config->text = $content;
+
+        if (isset($title) || isset($text)) {
+            $config->title = $title ?? $config->title;
+            $config->text = $text ?? $config->text;
         }
     }
 

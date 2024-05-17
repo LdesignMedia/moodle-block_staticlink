@@ -25,7 +25,6 @@
  * @author    Nihaal Shaikh
  */
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Upgrade code for the HTML block.

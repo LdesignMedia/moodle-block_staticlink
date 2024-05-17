@@ -24,10 +24,6 @@
  * @author    Nihaal Shaikh
  */
 
-$string['allowadditionalcssclasses'] = 'Allow additional CSS classes';
-$string['configallowadditionalcssclasses'] = 'Adds a configuration option to Static Link block instances allowing additional CSS classes to be set.';
-$string['configclasses'] = 'Additional CSS classes';
-$string['configclasses_help'] = 'The purpose of this configuration is to aid with theming by helping distinguish static link blocks from each other. Any CSS classes entered here (space delimited) will be appended to the block\'s default classes.';
 $string['configcontent'] = 'Content';
 $string['configtitle'] = 'Static Link block title';
 $string['html:addinstance'] = 'Add a new static link block';

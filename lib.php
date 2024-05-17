@@ -32,11 +32,9 @@
  * @param bool $forcedownload      whether or not force download
  * @param array $options           additional options affecting the file serving
  *
- * @return bool
- * @todo      MDL-36050 improve capability check on stick blocks, so we can check user capability before sending images.
  */
-function block_staticlink_pluginfile($course, $birecord_or_cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
-    global $DB, $CFG, $USER;
+function block_staticlink_pluginfile($course, $birecord_or_cm, $context, $filearea, $args, $forcedownload, array $options = []) {
+    global $CFG, $USER;
 
     if ($context->contextlevel != CONTEXT_BLOCK) {
         send_file_not_found();
@@ -65,50 +63,28 @@ function block_staticlink_pluginfile($course, $birecord_or_cm, $context, $filear
     if ($filearea !== 'content') {
         send_file_not_found();
     }
-
-    $fs = get_file_storage();
-
-    $filename = array_pop($args);
-    $filepath = $args ? '/'.implode('/', $args).'/' : '/';
-
-    if (!$file = $fs->get_file($context->id, 'block_staticlink', 'content', 0, $filepath, $filename) or $file->is_directory()) {
-        send_file_not_found();
-    }
-
-    if ($parentcontext = context::instance_by_id($birecord_or_cm->parentcontextid, IGNORE_MISSING)) {
-        if ($parentcontext->contextlevel == CONTEXT_USER) {
-            // force download on all personal pages including /my/
-            //because we do not have reliable way to find out from where this is used
-            $forcedownload = true;
-        }
-    } else {
-        // weird, there should be parent context, better force dowload then
-        $forcedownload = true;
-    }
-
-    // NOTE: it woudl be nice to have file revisions here, for now rely on standard file lifetime,
-    //       do not lower it because the files are dispalyed very often.
-    \core\session\manager::write_close();
-    send_stored_file($file, null, 0, $forcedownload, $options);
 }
 
 /**
  * Perform global search replace such as when migrating site to new URL.
+ *
  * @param  $search
  * @param  $replace
+ *
  * @return void
  */
-function block_staticlink_global_db_replace($search, $replace) {
+function block_staticlink_global_db_replace($search, $replace): void {
     global $DB;
 
-    $instances = $DB->get_recordset('block_instances', array('blockname' => 'staticlink'));
+    $instances = $DB->get_recordset('block_instances', ['blockname' => 'staticlink']);
     foreach ($instances as $instance) {
-        // TODO: intentionally hardcoded until MDL-26800 is fixed
         $config = unserialize_object(base64_decode($instance->configdata));
-        if (isset($config->text) and is_string($config->text)) {
+        if (isset($config->text) && is_string($config->text)) {
             $config->text = str_replace($search, $replace, $config->text);
-            $DB->update_record('block_instances', ['id' => $instance->id,
-                                                   'configdata' => base64_encode(serialize($config)), 'timemodified' => time()]);
+            $DB->update_record('block_instances', (object) [
+                'id' => $instance->id,
+                'configdata' => base64_encode(serialize($config)), 'timemodified' => time(),
+            ]);
         }
     }
     $instances->close();
@@ -117,8 +93,9 @@ function block_staticlink_global_db_replace($search, $replace) {
 /**
  * Given an array with a file path, it returns the itemid and the filepath for the defined filearea.
  *
- * @param  string $filearea The filearea.
- * @param  array  $args The path (the part after the filearea and before the filename).
+ * @param string $filearea The filearea.
+ * @param array $args      The path (the part after the filearea and before the filename).
+ *
  * @return array The itemid and the filepath inside the $args path, for the defined filearea.
  */
 function block_staticlink_get_path_from_pluginfile(string $filearea, array $args): array {
