@@ -4,10 +4,15 @@ name: ci
 on: [push, pull_request]
 
 jobs:
-  ci:
+  test:
     uses: catalyst/catalyst-moodle-workflows/.github/workflows/ci.yml@main
+    secrets:
       # Required if you plan to publish (uncomment the below)
-      # secrets:
-    # moodle_org_token: ${{ secrets.MOODLE_ORG_TOKEN }}
+      moodle_org_token: ${{ secrets.MOODLE_ORG_TOKEN }}
     with:
-    # Any further options in this section
+      #Grunt fails due to CSS styling needing an !important.
+      disable_grunt: true
+      disable_phpunit: true
+      disable_release : true
+      release_branches: main
+      min_php : 8.1
