@@ -20,7 +20,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @package   block_staticlink
- * @copyright 29/12/2021 Mfreak.nl | LdesignMedia.nl - Luuk Verhoeven
+ * @copyright 21/05/2024 Mfreak.nl | LdesignMedia.nl - Luuk Verhoeven
  * @author    Nihaal Shaikh
  */
 
