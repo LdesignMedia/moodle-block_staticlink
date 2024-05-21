@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2024051600;
+$plugin->version = 2024052100;
 $plugin->requires = 2022051300;
 $plugin->supported = [400, 401];
 $plugin->component = 'block_staticlink';

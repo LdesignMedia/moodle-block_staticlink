@@ -25,20 +25,14 @@ Only the [123] part will be allowed to be edited in the block by the user.
 
 * Recommended Moodle version: **4.1 Moodle**
 * Recommended PHP version: **8.1**
-* Required Moodle version: **4.3 Moodle Workplace**
-* Required PHP version: **8.0**
+* Required Moodle version: **4.1 Moodle Workplace**
+* Required PHP version: **8.1**
 
 ---
 ### Changelog
 
 ##### 4.1.0 (21.05.2024)
 * Original release
-
----
-### License
-
-This project is licensed under the **GNU General Public License v3.0**. - http://www.gnu.org/licenses or see
-the [LICENSE](LICENSE.md) file.
 
 ---
 
