@@ -25,6 +25,9 @@
  */
 class block_staticlink extends block_base {
 
+    /**
+     * Init the block.
+     */
     public function init(): void {
         $this->title = get_string('pluginname', 'block_staticlink');
     }
@@ -41,9 +44,14 @@ class block_staticlink extends block_base {
      * @return array page-type prefix => true/false.
      */
     public function applicable_formats(): array {
-        return array('all' => true);
+        return ['all' => true];
     }
 
+    /**
+     * This function is called on your subclass right after an instance is loaded
+     * Use this function to act on instance data just after it's loaded and before anything else is done
+     * For instance: if your block will have different title's depending on location (site, course, blog, etc)
+     */
     public function specialization(): void {
         if (isset($this->config->title)) {
             $this->title = $this->title = format_string($this->config->title, true, ['context' => $this->context]);
@@ -54,6 +62,7 @@ class block_staticlink extends block_base {
 
     /**
      * Allow multiple instances
+     *
      * @return bool
      */
     public function instance_allow_multiple(): bool {
@@ -80,7 +89,14 @@ class block_staticlink extends block_base {
         $this->content->footer = '';
         if (isset($this->config->text)) {
             // Rewrite url.
-            $this->config->text = file_rewrite_pluginfile_urls($this->config->text, 'pluginfile.php', $this->context->id, 'block_staticlink', 'content', null);
+            $this->config->text = file_rewrite_pluginfile_urls(
+                $this->config->text,
+                'pluginfile.php',
+                $this->context->id,
+                'block_staticlink',
+                'content',
+                null
+            );
             $this->content->text = get_string('staticlink', 'block_staticlink', $this->config->text);
         } else {
             $this->content->text = '';
@@ -100,4 +116,5 @@ class block_staticlink extends block_base {
     public function instance_can_be_docked(): bool {
         return !empty($this->config->title) && parent::instance_can_be_docked();
     }
+
 }
