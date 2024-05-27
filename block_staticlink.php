@@ -35,16 +35,10 @@ class block_staticlink extends block_base {
     /**
      * Which page types this block may appear on.
      *
-     * The information returned here is processed by the
-     * {@link blocks_name_allowed_in_format()} function. Look there if you need
-     * to know exactly how this works.
-     *
-     * Default case: everything except mod and tag.
-     *
-     * @return array page-type prefix => true/false.
+     * @return array
      */
     public function applicable_formats(): array {
-        return ['all' => true];
+        return ['course-view' => true];
     }
 
     /**
@@ -58,15 +52,6 @@ class block_staticlink extends block_base {
         } else {
             $this->title = get_string('newstaticlinkblock', 'block_staticlink');
         }
-    }
-
-    /**
-     * Allow multiple instances
-     *
-     * @return bool
-     */
-    public function instance_allow_multiple(): bool {
-        return true;
     }
 
     /**
