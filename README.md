@@ -19,7 +19,6 @@ Only the [123] part will be allowed to be edited in the block by the user.
 2. Login as administrator
 3. Go to Site Administrator > Notification
 4. Install the plugin
-5. Enabled the filter on global level `/admin/filters.php`.
 
 ##### Requirements:
 
