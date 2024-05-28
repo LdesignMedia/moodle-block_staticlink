@@ -30,7 +30,7 @@ Only the [123] part will be allowed to be edited in the block by the user.
 ---
 ### Changelog
 
-##### 4.1.0 (21.05.2024)
+##### 4.1.0 (28.05.2024)
 * Original release
 
 ---
